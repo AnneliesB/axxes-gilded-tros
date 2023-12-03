@@ -6,6 +6,6 @@ describe('GildedTros', () => {
     const items = [new Item('foo', 0, 0)];
     const app = new GildedTros(items);
     app.updateQuality();
-    expect(app.items[0].name).toEqual('fixme');
+    expect(app.items[0].name).toEqual('foo');
   });
 });
