@@ -38,6 +38,7 @@ describe('GildedTros', () => {
       const app = new GildedTros([
         new Item('item01', 1, 21),
         new Item('item02', 1, 20),
+        new Item('item03', 1, 1),
       ]);
       app.updateQuality();
       expect(app.items[0].name).toEqual('item01');
@@ -47,6 +48,10 @@ describe('GildedTros', () => {
       expect(app.items[1].name).toEqual('item02');
       expect(app.items[1].sellIn).toEqual(0);
       expect(app.items[1].quality).toEqual(19);
+
+      expect(app.items[2].name).toEqual('item03');
+      expect(app.items[2].sellIn).toEqual(0);
+      expect(app.items[2].quality).toEqual(0);
     });
 
     test('Should decrease the quality twice when the sell by date has passed', () => {
@@ -71,6 +76,10 @@ describe('GildedTros', () => {
         new Item('item01', 1, 0),
         new Item('item02', 0, 0),
         new Item('item03', -1, 0),
+        new Item('Backstage passes for Re:Factor', -1, 0),
+        new Item('Duplicate Code', -1, 1),
+        new Item('Long Methods', -1, 1),
+        new Item('Ugly Variable Names', -1, 1),
       ]);
       app.updateQuality();
       expect(app.items[0].name).toEqual('item01');
@@ -84,14 +93,33 @@ describe('GildedTros', () => {
       expect(app.items[2].name).toEqual('item03');
       expect(app.items[2].sellIn).toEqual(-2);
       expect(app.items[2].quality).toEqual(0);
+
+      expect(app.items[3].name).toEqual('Backstage passes for Re:Factor');
+      expect(app.items[3].sellIn).toEqual(-2);
+      expect(app.items[3].quality).toEqual(0);
+
+      expect(app.items[4].name).toEqual('Duplicate Code');
+      expect(app.items[4].sellIn).toEqual(-2);
+      expect(app.items[4].quality).toEqual(0);
+
+      expect(app.items[5].name).toEqual('Long Methods');
+      expect(app.items[5].sellIn).toEqual(-2);
+      expect(app.items[5].quality).toEqual(0);
+
+      expect(app.items[6].name).toEqual('Ugly Variable Names');
+      expect(app.items[6].sellIn).toEqual(-2);
+      expect(app.items[6].quality).toEqual(0);
     });
   });
 
   describe('"Good Wine" actually increases in Quality the older it gets', () => {
-    test('Should increase the quality by one when sellIn is not a negative value', () => {
+    test('Should increase the quality by one until 50', () => {
       const app = new GildedTros([
         new Item('Good Wine', 10, 0),
         new Item('Good Wine', 5, 5),
+        new Item('Good Wine', 0, 10),
+        new Item('Good Wine', -10, 20),
+        new Item('Good Wine', -11, 50),
       ]);
       app.updateQuality();
       expect(app.items[0].name).toEqual('Good Wine');
@@ -101,21 +129,18 @@ describe('GildedTros', () => {
       expect(app.items[1].name).toEqual('Good Wine');
       expect(app.items[1].sellIn).toEqual(4);
       expect(app.items[1].quality).toEqual(6);
-    });
 
-    test('Should increase the quality by two when sellIn is a negative value', () => {
-      const app = new GildedTros([
-        new Item('Good Wine', 0, 10),
-        new Item('Good Wine', -10, 20),
-      ]);
-      app.updateQuality();
-      expect(app.items[0].name).toEqual('Good Wine');
-      expect(app.items[0].sellIn).toEqual(-1);
-      expect(app.items[0].quality).toEqual(12);
+      expect(app.items[2].name).toEqual('Good Wine');
+      expect(app.items[2].sellIn).toEqual(-1);
+      expect(app.items[2].quality).toEqual(11);
 
-      expect(app.items[1].name).toEqual('Good Wine');
-      expect(app.items[1].sellIn).toEqual(-11);
-      expect(app.items[1].quality).toEqual(22);
+      expect(app.items[3].name).toEqual('Good Wine');
+      expect(app.items[3].sellIn).toEqual(-11);
+      expect(app.items[3].quality).toEqual(21);
+
+      expect(app.items[4].name).toEqual('Good Wine');
+      expect(app.items[4].sellIn).toEqual(-12);
+      expect(app.items[4].quality).toEqual(50);
     });
   });
 
@@ -161,6 +186,7 @@ describe('GildedTros', () => {
       const app = new GildedTros([
         new Item('B-DAWG Keychain', 0, 80),
         new Item('B-DAWG Keychain', -10, 80),
+        new Item('B-DAWG Keychain', -10, 10),
       ]);
       app.updateQuality();
       expect(app.items[0].name).toEqual('B-DAWG Keychain');
@@ -170,6 +196,10 @@ describe('GildedTros', () => {
       expect(app.items[1].name).toEqual('B-DAWG Keychain');
       expect(app.items[1].sellIn).toEqual(-10);
       expect(app.items[1].quality).toEqual(80);
+
+      expect(app.items[2].name).toEqual('B-DAWG Keychain');
+      expect(app.items[2].sellIn).toEqual(-10);
+      expect(app.items[2].quality).toEqual(80);
     });
   });
 
@@ -209,7 +239,6 @@ describe('GildedTros', () => {
         expect(app.items[1].sellIn).toEqual(8);
         expect(app.items[1].quality).toEqual(27);
 
-        // TODO: fix quality calculations for Haxx
         expect(app.items[2].name).toEqual('Backstage passes for HAXX');
         expect(app.items[2].sellIn).toEqual(9);
         expect(app.items[2].quality).toEqual(27);
@@ -237,7 +266,6 @@ describe('GildedTros', () => {
         expect(app.items[1].sellIn).toEqual(3);
         expect(app.items[1].quality).toEqual(28);
 
-        // TODO: fix quality calculations for Haxx
         expect(app.items[2].name).toEqual('Backstage passes for HAXX');
         expect(app.items[2].sellIn).toEqual(4);
         expect(app.items[2].quality).toEqual(28);
@@ -259,7 +287,6 @@ describe('GildedTros', () => {
         ]);
         app.updateQuality();
 
-        // TODO: fix code to set quality to 0 on expired items
         expect(app.items[0].name).toEqual('Backstage passes for Re:Factor');
         expect(app.items[0].sellIn).toEqual(-1);
         expect(app.items[0].quality).toEqual(0);
@@ -268,7 +295,6 @@ describe('GildedTros', () => {
         expect(app.items[1].sellIn).toEqual(-2);
         expect(app.items[1].quality).toEqual(0);
 
-        // TODO: fix code to set quality to 0 on expired items
         expect(app.items[2].name).toEqual('Backstage passes for HAXX');
         expect(app.items[2].sellIn).toEqual(-1);
         expect(app.items[2].quality).toEqual(0);
@@ -280,6 +306,7 @@ describe('GildedTros', () => {
       });
     });
   });
+
   describe('Smelly items ("Duplicate Code", "Long Methods", "Ugly Variable Names") degrade in Quality twice as fast as normal items', () => {
     test('Should decrease quality by two', () => {
       const app = new GildedTros([
@@ -290,7 +317,6 @@ describe('GildedTros', () => {
         new Item('Ugly Variable Names', 1, 1),
       ]);
       app.updateQuality();
-      // TODO: fix calculations to degrade smelly items twice as fast
       expect(app.items[0].name).toEqual('Duplicate Code');
       expect(app.items[0].sellIn).toEqual(2);
       expect(app.items[0].quality).toEqual(4);
@@ -310,6 +336,26 @@ describe('GildedTros', () => {
       expect(app.items[4].name).toEqual('Ugly Variable Names');
       expect(app.items[4].sellIn).toEqual(0);
       expect(app.items[4].quality).toEqual(0);
+    });
+
+    test('Should decrease quality by four for expired items', () => {
+      const app = new GildedTros([
+        new Item('Duplicate Code', 0, 6),
+        new Item('Long Methods', 0, 2),
+        new Item('Ugly Variable Names', 0, 10),
+      ]);
+      app.updateQuality();
+      expect(app.items[0].name).toEqual('Duplicate Code');
+      expect(app.items[0].sellIn).toEqual(-1);
+      expect(app.items[0].quality).toEqual(2);
+
+      expect(app.items[1].name).toEqual('Long Methods');
+      expect(app.items[1].sellIn).toEqual(-1);
+      expect(app.items[1].quality).toEqual(0);
+
+      expect(app.items[2].name).toEqual('Ugly Variable Names');
+      expect(app.items[2].sellIn).toEqual(-1);
+      expect(app.items[2].quality).toEqual(6);
     });
   });
 });
