@@ -221,7 +221,7 @@ describe('GildedTros', () => {
         expect(app.items[1].quality).toEqual(26);
       });
 
-      test('Should update the quality by one when sellIn equals or is less than 10 but more than 5', () => {
+      test('Should update the quality by two when sellIn equals or is less than 10 but more than 5', () => {
         const app = new GildedTros([
           new Item('Backstage passes for Re:Factor', 10, 25),
           new Item('Backstage passes for Re:Factor', 9, 25),
@@ -248,7 +248,7 @@ describe('GildedTros', () => {
         expect(app.items[3].quality).toEqual(27);
       });
 
-      test('Should update the quality by one when sellIn equals or is less than 5', () => {
+      test('Should update the quality by three when sellIn equals or is less than 5', () => {
         const app = new GildedTros([
           new Item('Backstage passes for Re:Factor', 5, 25),
           new Item('Backstage passes for Re:Factor', 4, 25),
@@ -273,6 +273,22 @@ describe('GildedTros', () => {
         expect(app.items[3].name).toEqual('Backstage passes for HAXX');
         expect(app.items[3].sellIn).toEqual(3);
         expect(app.items[3].quality).toEqual(28);
+      });
+
+      test('Should update the quality by three when sellIn equals 1', () => {
+        const app = new GildedTros([
+          new Item('Backstage passes for Re:Factor', 1, 25),
+          new Item('Backstage passes for HAXX', 1, 25),
+        ]);
+        app.updateQuality();
+
+        expect(app.items[0].name).toEqual('Backstage passes for Re:Factor');
+        expect(app.items[0].sellIn).toEqual(0);
+        expect(app.items[0].quality).toEqual(28);
+
+        expect(app.items[1].name).toEqual('Backstage passes for HAXX');
+        expect(app.items[1].sellIn).toEqual(0);
+        expect(app.items[1].quality).toEqual(28);
       });
     });
 

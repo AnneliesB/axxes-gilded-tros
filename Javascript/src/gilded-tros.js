@@ -35,7 +35,9 @@ export class GildedTros {
     }
 
     // All conferences with a negative sell by date have a quality of 0
-    if (item.sellIn > 0) {
+    // Here we assume that sellIn 0 means "the day of the conference" and people can still technically buy passes on the day of
+    // TODO: validate if this is the desired behavior
+    if (item.sellIn >= 0) {
       item.quality = sumWithMaxLimit(item.quality, increaseValue);
     } else {
       item.quality = 0;
