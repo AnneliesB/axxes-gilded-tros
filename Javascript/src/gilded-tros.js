@@ -14,12 +14,9 @@ export class GildedTros {
 
   //Smelly items degrade in Quality twice as fast as normal items
   handleSmellyItems(item) {
-    if (item.sellIn < 0) {
-      // Once the sell by date has passed, Quality degrades twice as fast
-      item.quality = subtractWithMinZero(item.quality, 4);
-    } else {
-      item.quality = subtractWithMinZero(item.quality, 2);
-    }
+    // Once the sell by date has passed, Quality degrades twice as fast
+    let decreaseValue = item.sellIn < 0 ? 4 : 2;
+    item.quality = subtractWithMinZero(item.quality, decreaseValue);
   }
 
   /**
@@ -29,22 +26,18 @@ export class GildedTros {
    */
   handleBackstagePasses(item) {
     // All conferences with a sellIn more than 10: we increase the quality by 1 (max 50)
-    if (item.sellIn > 10) {
-      item.quality = sumWithMaxLimit(item.quality, 1);
-    }
+    let increaseValue = 1;
 
     // All conferences with a sellIn equals to 10, 9, 8, 7 or 6: we increase the quality by 2 (max 50)
-    if (item.sellIn <= 10 && item.sellIn > 5) {
-      item.quality = sumWithMaxLimit(item.quality, 2);
-    }
-
     // All conferences with a sellIn equals to 5, 4, 3, 2, 1 or 0: we increase the quality by 3 (max 50)
-    if (item.sellIn <= 5 && item.sellIn >= 0) {
-      item.quality = sumWithMaxLimit(item.quality, 3);
+    if (item.sellIn <= 10) {
+      increaseValue = item.sellIn <= 5 ? 3 : 2;
     }
 
     // All conferences with a negative sell by date have a quality of 0
-    if (item.sellIn < 0) {
+    if (item.sellIn > 0) {
+      item.quality = sumWithMaxLimit(item.quality, increaseValue);
+    } else {
       item.quality = 0;
     }
   }
@@ -62,12 +55,9 @@ export class GildedTros {
 
   // At the end of each day our system lowers both (sellIn & quality) values for every item
   handleDefault(item) {
-    if (item.sellIn < 0) {
-      // Once the sell by date has passed, Quality degrades twice as fast
-      item.quality = subtractWithMinZero(item.quality, 2);
-    } else {
-      item.quality = subtractWithMinZero(item.quality, 1);
-    }
+    // Once the sell by date has passed, Quality degrades twice as fast
+    let decreaseValue = item.sellIn < 0 ? 2 : 1;
+    item.quality = subtractWithMinZero(item.quality, decreaseValue);
   }
 
   /**
